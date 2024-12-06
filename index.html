@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Solar System with Custom Starry Background</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      background-color: black;
+    }
+
+    .stars {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    .star {
+      position: absolute;
+      background-color: white;
+      border-radius: 50%;
+      opacity: 0;
+      animation: twinkle 2s infinite;
+    }
+
+    @keyframes twinkle {
+      0%, 100% {
+        opacity: 0;
+        transform: scale(0.5);
+      }
+      50% {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="stars"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/three@0.150.0/build/three.min.js"></script>
+  <script>
+    const starContainer = document.querySelector('.stars');
+    const numberOfStars = 200;
+
+    for (let i = 0; i < numberOfStars; i++) {
+      const star = document.createElement('div');
+      star.classList.add('star');
+
+      const size = Math.random() * 3 + 1; 
+      const x = Math.random() * window.innerWidth;
+      const y = Math.random() * window.innerHeight;
+      const duration = Math.random() * 2 + 3; 
+
+      star.style.width = `${size}px`;
+      star.style.height = `${size}px`;
+      star.style.left = `${x}px`;
+      star.style.top = `${y}px`;
+      star.style.animationDuration = `${duration}s`;
+
+      starContainer.appendChild(star);
+    }
+
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.domElement);
+
+    const sunGeometry = new THREE.SphereGeometry(5, 32, 32);
+    const sunMaterial = new THREE.MeshBasicMaterial({ color: 0xf48037 });
+    const sun = new THREE.Mesh(sunGeometry, sunMaterial);
+    scene.add(sun);
+
+    const planet1Geometry = new THREE.SphereGeometry(1, 32, 32);
+    const planet1Material = new THREE.MeshPhongMaterial({ color: 0x0077ff });
+    const planet1 = new THREE.Mesh(planet1Geometry, planet1Material);
+    planet1.position.set(10, 0, 0);
+    scene.add(planet1);
+
+    const planet2Geometry = new THREE.SphereGeometry(1.5, 32, 32);
+    const planet2Material = new THREE.MeshPhongMaterial({ color: 0xaf7c1c });
+    const planet2 = new THREE.Mesh(planet2Geometry, planet2Material);
+    planet2.position.set(15, 0, 0);
+    scene.add(planet2);
+
+    const planet3Geometry = new THREE.SphereGeometry(2, 32, 32);
+    const planet3Material = new THREE.MeshPhongMaterial({ color: 0x4f4cb0 });
+    const planet3 = new THREE.Mesh(planet3Geometry, planet3Material);
+    planet3.position.set(20, 0, 0);
+    scene.add(planet3);
+
+    const light = new THREE.PointLight(0xffffff, 1, 0);
+    light.position.set(0, 0, 0);
+    scene.add(light);
+
+    camera.position.z = 50;
+
+    function animate() {
+      requestAnimationFrame(animate);
+      sun.rotation.y += 0.01;
+      planet1.rotation.y += 0.02;
+      renderer.render(scene, camera);
+    }
+    animate();
+
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+  </script>
+</body>
+</html>
