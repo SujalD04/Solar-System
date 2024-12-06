@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Solar System with Custom Starry Background</title>
+  <title>Solar System</title>
   <style>
     body {
       margin: 0;
@@ -42,6 +42,7 @@
   <div class="stars"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/three@0.150.0/build/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.150.0/examples/js/controls/OrbitControls.js"></script>
   <script>
     const starContainer = document.querySelector('.stars');
     const numberOfStars = 200;
@@ -75,7 +76,6 @@
     const sun = new THREE.Mesh(sunGeometry, sunMaterial);
     scene.add(sun);
 
-    // Create planets
     const planets = [
       {
         geometry: new THREE.SphereGeometry(1, 32, 32),
@@ -103,7 +103,6 @@
       }
     ];
 
-    // Add planets to the scene
     planets.forEach((planet) => {
       const planetMesh = new THREE.Mesh(planet.geometry, planet.material);
       planet.mesh = planetMesh;
@@ -114,17 +113,15 @@
     light.position.set(0, 0, 0);
     scene.add(light);
 
-    camera.position.z = 50;
+    camera.position.z = 35;
 
     function animate() {
       requestAnimationFrame(animate);
 
-      // Rotate the Sun
       sun.rotation.y += 0.01;
 
-      // Update planets' positions to make them revolve around the Sun
       planets.forEach((planet) => {
-        planet.angle += planet.speed; // Increase the angle to move the planet
+        planet.angle += planet.speed; 
 
         planet.mesh.position.x = Math.cos(planet.angle) * planet.distance;
         planet.mesh.position.z = Math.sin(planet.angle) * planet.distance;
