@@ -75,23 +75,40 @@
     const sun = new THREE.Mesh(sunGeometry, sunMaterial);
     scene.add(sun);
 
-    const planet1Geometry = new THREE.SphereGeometry(1, 32, 32);
-    const planet1Material = new THREE.MeshPhongMaterial({ color: 0x0077ff });
-    const planet1 = new THREE.Mesh(planet1Geometry, planet1Material);
-    planet1.position.set(10, 0, 0);
-    scene.add(planet1);
+    // Create planets
+    const planets = [
+      {
+        geometry: new THREE.SphereGeometry(1, 32, 32),
+        material: new THREE.MeshPhongMaterial({ color: 0x0077ff }),
+        distance: 10,
+        speed: 0.02,
+        mesh: null,
+        angle: 0
+      },
+      {
+        geometry: new THREE.SphereGeometry(1.5, 32, 32),
+        material: new THREE.MeshPhongMaterial({ color: 0xaf7c1c }),
+        distance: 15,
+        speed: 0.015,
+        mesh: null,
+        angle: 0
+      },
+      {
+        geometry: new THREE.SphereGeometry(2, 32, 32),
+        material: new THREE.MeshPhongMaterial({ color: 0x4f4cb0 }),
+        distance: 20,
+        speed: 0.01,
+        mesh: null,
+        angle: 0
+      }
+    ];
 
-    const planet2Geometry = new THREE.SphereGeometry(1.5, 32, 32);
-    const planet2Material = new THREE.MeshPhongMaterial({ color: 0xaf7c1c });
-    const planet2 = new THREE.Mesh(planet2Geometry, planet2Material);
-    planet2.position.set(15, 0, 0);
-    scene.add(planet2);
-
-    const planet3Geometry = new THREE.SphereGeometry(2, 32, 32);
-    const planet3Material = new THREE.MeshPhongMaterial({ color: 0x4f4cb0 });
-    const planet3 = new THREE.Mesh(planet3Geometry, planet3Material);
-    planet3.position.set(20, 0, 0);
-    scene.add(planet3);
+    // Add planets to the scene
+    planets.forEach((planet) => {
+      const planetMesh = new THREE.Mesh(planet.geometry, planet.material);
+      planet.mesh = planetMesh;
+      scene.add(planetMesh);
+    });
 
     const light = new THREE.PointLight(0xffffff, 1, 0);
     light.position.set(0, 0, 0);
@@ -101,8 +118,18 @@
 
     function animate() {
       requestAnimationFrame(animate);
+
+      // Rotate the Sun
       sun.rotation.y += 0.01;
-      planet1.rotation.y += 0.02;
+
+      // Update planets' positions to make them revolve around the Sun
+      planets.forEach((planet) => {
+        planet.angle += planet.speed; // Increase the angle to move the planet
+
+        planet.mesh.position.x = Math.cos(planet.angle) * planet.distance;
+        planet.mesh.position.z = Math.sin(planet.angle) * planet.distance;
+      });
+
       renderer.render(scene, camera);
     }
     animate();
